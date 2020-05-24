@@ -13,12 +13,19 @@
 // 	console.log(data);
 // });
 
-const add = (num1, num2, callback) => {
+// const add = (num1, num2, callback) => {
+// 	setTimeout(() => {
+// 		callback(num1 + num2);
+// 	}, 2000);
+// };
+
+// add(1, 4, (sum) => {
+// 	console.log(sum);
+// });
+
+const doWorkCallBack = (callback) => {
 	setTimeout(() => {
-		callback(num1 + num2);
+		callback(undefined, [1, 2, 4]);
 	}, 2000);
 };
-
-add(1, 4, (sum) => {
-	console.log(sum);
-});
+doWorkCallBack((err, result) => {});
