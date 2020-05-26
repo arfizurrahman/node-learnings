@@ -77,9 +77,14 @@ userSchema.methods.toJSON = function () {
 	return userObject;
 };
 
+// mongodb+srv://taskapp:<password>@cluster0-dnuzt.mongodb.net/test
+
 userSchema.methods.generateAuthToken = async function () {
 	const user = this;
-	const token = jwt.sign({ _id: user._id.toString() }, 'thisisasecretkey');
+	const token = jwt.sign(
+		{ _id: user._id.toString() },
+		process.env.JWT_SECRET
+	);
 
 	user.tokens = user.tokens.concat({ token });
 	await user.save();

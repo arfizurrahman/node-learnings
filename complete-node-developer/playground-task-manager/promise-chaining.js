@@ -1,6 +1,6 @@
-require('../src/db/mongoose');
+require('../task-manager/src/db/mongoose');
 
-const User = require('../src/models/user');
+const User = require('../task-manager/src/models/user');
 
 // User.findByIdAndUpdate('5ecabb9deca7cb2c1055995b', {
 // 	age: 1,
