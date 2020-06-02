@@ -2,10 +2,9 @@ const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const errorController = require('./controllers/error');
-const sequelize = require('./util/database');
-const Product = require('./models/product');
 const User = require('./models/user');
 
 const app = express();
@@ -20,39 +19,35 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
-  User.findById(1)
-    .then(user => {
-      req.user = user;
-      next();
-    })
-    .catch(err => console.log(err));
+	User.findById('5bab316ce0a7c75f783cb8a8')
+		.then((user) => {
+			req.user = user;
+			next();
+		})
+		.catch((err) => console.log(err));
 });
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 
 app.use(errorController.get404);
-
-Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
-User.hasMany(Product);
-
-sequelize
-  // .sync({ force: true })
-  .sync()
-  .then(result => {
-    return User.findById(1);
-    // console.log(result);
-  })
-  .then(user => {
-    if (!user) {
-      return User.create({ name: 'Max', email: 'test@test.com' });
-    }
-    return user;
-  })
-  .then(user => {
-    // console.log(user);
-    app.listen(3000);
-  })
-  .catch(err => {
-    console.log(err);
-  });
+mongoose
+	.connect('mongodb://127.0.0.1:27017/online-shop')
+	.then((result) => {
+		User.findOne().then((user) => {
+			if (!user) {
+				const user = new User({
+					name: 'Max',
+					email: 'max@test.com',
+					cart: {
+						items: [],
+					},
+				});
+				user.save();
+			}
+		});
+		app.listen(3000);
+	})
+	.catch((err) => {
+		console.log(err);
+	});
